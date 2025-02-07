@@ -1,0 +1,11 @@
+export declare const isBluetoothEnabled: () => Promise<boolean>;
+export declare const enableBluetooth: () => Promise<void>;
+export declare const startDiscovery: () => Promise<unknown>;
+export declare const stopDiscovery: () => Promise<void>;
+export declare const connectDevice: (deviceId: string) => Promise<false | import("react-native-bluetooth-classic").BluetoothDevice>;
+export declare const disconnectDevice: (deviceId: string) => Promise<true>;
+export declare const pairDevice: (deviceId: string) => Promise<import("react-native-bluetooth-classic").BluetoothDevice>;
+export declare const unPairDevice: (deviceId: string) => Promise<true>;
+export declare const getPairedDevices: () => Promise<import("react-native-bluetooth-classic").BluetoothDevice[]>;
+export declare const getConnectedDevice: () => Promise<import("react-native-bluetooth-classic").BluetoothDevice[]>;
+//# sourceMappingURL=bluetooth.d.ts.map
