@@ -128,8 +128,4 @@ const sendData = async (device: BluetoothDevice, data: string) => {
 | unPairDevice           | attempts to unpair the specified device. Requires Android API level 19 or higher.                                          |
 | connectDevice          | attempt to connect specific device.                                                                                        |
 | disconnectDevice       | attempt to disconnect specific device.                                                                                     |
-| onDataReceived         | provide a listener for incoming data.                                                                                      |
-| storeScanData          | store the data to the AsyncStorage.                                                                                        |
-| getScanData            | get the stored data from the AsyncStorage.                                                                                 |
-| deleteData             | delete data from the AsyncStorage.                                                                                         |
-| genereteCSV            | generate CSV file and stored in the device.                                                                                |
+| onDataReceived         | provide a listener for incoming data.                                                                                
