@@ -12,7 +12,7 @@ export const useOnDataReceived = (address: string): [string, () => void] => {
         const onDataReceived = (event: { data: string }) => {
             setData(event.data);
         }
-
+        
         const subscription: BluetoothEventSubscription = RNBluetoothClassic.onDeviceRead(address, onDataReceived);
         return () => subscription.remove();
         

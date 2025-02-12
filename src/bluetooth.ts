@@ -1,7 +1,6 @@
 import RNBluetoothClassic, {
   BluetoothDevice,
-  BluetoothDeviceEvent,
-  BluetoothStateChangeEvent
+  BluetoothDeviceEvent
 } from "react-native-bluetooth-classic";
 import { checkAllPermissions } from "./permission";
 import { ToastAndroid } from "react-native";
@@ -142,10 +141,6 @@ export const getConnectedDevice = async () => {
   }
 };
 
-/**
- * Fetches the list of bonded (paired) Bluetooth devices.
- * @returns Promise that resolves to an array of bonded Bluetooth devices.
- */
 export const getBondedDevices = async (): Promise<BluetoothDevice[]> => {
   try {
     const bondedDevices = await RNBluetoothClassic.getBondedDevices();
@@ -156,47 +151,23 @@ export const getBondedDevices = async (): Promise<BluetoothDevice[]> => {
   }
 };
 
-/**
- * Adds a listener for when Bluetooth is enabled.
- * @param callback A function to be called when Bluetooth is enabled.
- * @returns Subscription object for managing the listener.
- */
-export const onBluetoothEnabled = (
-  callback: () => void
-): Subscription => {
+export const onBluetoothEnabled = (callback: () => void): Subscription => {
   const subscription = RNBluetoothClassic.onBluetoothEnabled(callback);
   return subscription;
 };
 
-/**
- * Adds a listener for when Bluetooth is disabled.
- * @param callback A function to be called when Bluetooth is disabled.
- * @returns Subscription object for managing the listener.
- */
-export const onBluetoothDisabled = (
-  callback: () => void
-): Subscription => {
+export const onBluetoothDisabled = (callback: () => void): Subscription => {
   const subscription = RNBluetoothClassic.onBluetoothDisabled(callback);
   return subscription;
 };
 
-/**
- * Adds a listener for Bluetooth state changes.
- * @param callback A function to handle Bluetooth state changes.
- * @returns Subscription object for managing the listener.
- */
 export const onStateChanged = (
-  callback: (event: BluetoothStateChangeEvent) => void
+  callback: (event: BluetoothDeviceEvent) => void
 ): Subscription => {
   const subscription = RNBluetoothClassic.onStateChanged(callback);
   return subscription;
 };
 
-/**
- * Adds a listener for when a device gets connected.
- * @param callback A function to handle the connected Bluetooth device.
- * @returns Subscription object for managing the listener.
- */
 export const onDeviceConnected = (
   callback: (device: BluetoothDeviceEvent) => void
 ): Subscription => {
@@ -204,11 +175,6 @@ export const onDeviceConnected = (
   return subscription;
 };
 
-/**
- * Adds a listener for when a device gets disconnected.
- * @param callback A function to handle the disconnected Bluetooth device.
- * @returns Subscription object for managing the listener.
- */
 export const onDeviceDisconnected = (
   callback: (device: BluetoothDeviceEvent) => void
 ): Subscription => {
@@ -216,9 +182,6 @@ export const onDeviceDisconnected = (
   return subscription;
 };
 
-/**
- * Opens Bluetooth settings on the device.
- */
 export const openBluetoothSettings = async (): Promise<void> => {
   try {
     await RNBluetoothClassic.openBluetoothSettings();
@@ -229,10 +192,59 @@ export const openBluetoothSettings = async (): Promise<void> => {
   }
 };
 
-/**
- * Cleans up all subscriptions.
- * @param subscriptions Array of Subscription objects to be removed.
- */
 export const cleanupSubscriptions = (subscriptions: Subscription[]): void => {
   subscriptions.forEach((subscription) => subscription.remove());
+};
+
+export const read = async (device: BluetoothDevice): Promise<any> => {
+  try {
+    if (!device) throw new Error("No device connected.");
+    const data = await device.read();
+    console.log(`Data read from device: ${data}`);
+    return data;
+  } catch (error) {
+    console.error("Error reading data from device:", error);
+    throw new Error("Failed to read data from device");
+  }
+};
+
+export const write = async (
+  device: BluetoothDevice,
+  data: string
+): Promise<boolean> => {
+  try {
+    if (!device) throw new Error("No device connected.");
+    const success = await device.write(data);
+    if (success) {
+      console.log(`Data written to device: ${data}`);
+    }
+    return success;
+  } catch (error) {
+    console.error(`Error writing data to device: ${data}`, error);
+    throw new Error("Failed to write data to device");
+  }
+};
+
+export const available = async (device: BluetoothDevice): Promise<number> => {
+  try {
+    if (!device) throw new Error("No device connected.");
+    const bytesAvailable = await device.available();
+    console.log(`Bytes available to read: ${bytesAvailable}`);
+    return bytesAvailable;
+  } catch (error) {
+    console.error("Error checking available bytes:", error);
+    throw new Error("Failed to check available bytes");
+  }
+};
+
+export const clear = async (device: BluetoothDevice): Promise<boolean> => {
+  try {
+    if (!device) throw new Error("No device connected.");
+    const cleared = await device.clear();
+    console.log("Buffer cleared");
+    return cleared;
+  } catch (error) {
+    console.error("Error clearing buffer:", error);
+    throw new Error("Failed to clear buffer");
+  }
 };
