@@ -24,6 +24,14 @@
   "files": [
     "src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yashtops/react-native-classicbluetooth-sdk.git"
+  },
+  "bugs": {
+    "url": "git+https://github.com/yashtops/react-native-classicbluetooth-sdk.git/issues"
+  },
+  "homepage": "git+https://github.com/yashtops/react-native-classicbluetooth-sdk.git#readme",
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
