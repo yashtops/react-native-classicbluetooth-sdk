@@ -1,41 +1,71 @@
-
 # React Native Classic Bluetooth SDK
 
-It helps to connect with classic bluetooth device.
-
+This SDK provides functionalities to connect with classic Bluetooth devices and handle permissions required for Bluetooth and location access.
 
 ## Installation
 
-```
-  npm install react-native-classicbluetooth-sdk
-```
-## Dependencies
+To install the SDK, run:
 
-This library needs these dependencies to be installed in your project before you can use it:
-
+```sh
+npm install react-native-classicbluetooth-sdk
 ```
-  npm install react-native-bluetooth-classic @react-native-async-storage/async-storage react-native-fs react-native-geolocation-service
-```
+## Permissions
 
-## Permission
-
-Add required permissions in `AndroidMainfest.xml`
+Add the required permissions in `AndroidManifest.xml`:
 
 ```xml
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+<uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 ```
 
-## Usage
+## SDK Functions
 
+### Bluetooth Functions (bluetooth.ts)
+
+| Method                 | Description |
+|---------------------- |-------------|
+| `enableBluetooth`    | Requests to enable Bluetooth. |
+| `isBluetoothEnabled` | Checks if Bluetooth is enabled. |
+| `startDiscovery`     | Starts discovering Bluetooth devices. |
+| `stopDiscovery`      | Cancels the discovery process. |
+| `connectDevice`      | Connects to a specific device. |
+| `disconnectDevice`   | Disconnects from a device. |
+| `pairDevice`         | Pairs with a Bluetooth device. |
+| `unPairDevice`       | Unpairs a previously paired device. |
+| `getPairedDevices`   | Retrieves a list of paired devices. |
+| `getConnectedDevice` | Retrieves a list of connected devices. |
+| `getBondedDevices`   | Fetches bonded (trusted) devices. |
+| `onBluetoothEnabled` | Listens for Bluetooth being enabled. |
+| `onBluetoothDisabled`| Listens for Bluetooth being disabled. |
+| `onStateChanged`     | Listens for Bluetooth state changes. |
+| `onDeviceConnected`  | Listens for device connections. |
+| `onDeviceDisconnected` | Listens for device disconnections. |
+| `openBluetoothSettings` | Opens Bluetooth settings on the device. |
+| `cleanupSubscriptions` | Cleans up event subscriptions. |
+| `read`               | Reads data from a connected device. |
+| `write`              | Writes data to a connected device. |
+| `available`          | Checks available bytes for reading. |
+| `clear`              | Clears the Bluetooth buffer. |
+
+### Permission Functions (permissions.ts)
+
+| Method                 | Description |
+|---------------------- |-------------|
+| `requestAllPermissions` | Requests Bluetooth and location permissions. |
+| `checkAllPermissions`   | Checks the status of required permissions. |
+| `requestLocationService` | Requests location service to be enabled. |
+
+## Usage in React Native
+
+### Initializing Bluetooth and Permissions
 ```javascript
 import { 
     enableBluetooth, 
@@ -92,9 +122,34 @@ const App = () =>{
     }
 }
 ```
-## Device
+
+### Connecting and Communicating with Devices
 ```javascript
-const readData = async (device: BluetoothDevice) => {
+import { 
+    read,
+    write,
+    connectToDevice
+} from 'react-native-classicbluetooth-sdk';
+
+const connectToDevice = async (deviceId) => {
+  try {
+    await connectDevice(deviceId);
+    console.log(`Connected to: ${deviceId}`);
+  } catch (error) {
+    console.error("Failed to connect", error);
+  }
+};
+
+const sendDataToDevice = async (device, data) => {
+  try {
+    await write(device, data);
+    console.log("Data sent successfully");
+  } catch (error) {
+    console.error("Failed to send data:", error);
+  }
+};
+
+const readDataFromDevice = async (device) => {
   try {
     const data = await read(device);
     console.log("Received data:", data);
@@ -102,30 +157,4 @@ const readData = async (device: BluetoothDevice) => {
     console.error("Failed to read data:", error);
   }
 };
-
-const sendData = async (device: BluetoothDevice, data: string) => {
-  try {
-    const success = await write(device, data);
-    console.log("Data sent successfully:", success);
-  } catch (error) {
-    console.error("Failed to send data:", error);
-  }
-};
-
 ```
-
-## Methods
-
-| Method                 |Description                                                                                                                 |
-|----------------------- |----------------------------------------------------------------------------------------------------------------------------|
-| requestAllPermissions  | request Bluetooth and Location permission.                                                                                 |
-| checkAllPermissions    | check and return permissions status granted or not.                                                                       |
-| isBluetoothEnabled     | check and return if bluetooth is enabled or not.                                                                           |
-| enableBluetooth        | Request that Android enable the bluetooth.                                                                                 |
-| startDiscovery         | this will resolve with an array of discovered BluetoothDevice(s).                                                          |
-| stopDiscovery          | cancels the discovery process.                                                                                             |
-| pairDevice             | attempts to pair the specified device. Requires Android API level 19 or higher.                                            |
-| unPairDevice           | attempts to unpair the specified device. Requires Android API level 19 or higher.                                          |
-| connectDevice          | attempt to connect specific device.                                                                                        |
-| disconnectDevice       | attempt to disconnect specific device.                                                                                     |
-| onDataReceived         | provide a listener for incoming data.                                                                                
